@@ -7,12 +7,11 @@ st.title("B.Sc. Geography Study Planner")
 
 # Set your Google Sheet URL
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
-
 # Initialize connection (reads automatically from st.secrets)
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 try:
-    df = conn.read(spreadsheet=SPREADSHEET_URL, worksheet="Sheet1", ttl=0)
+    df = conn.read(spreadsheet=https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?gid=1659856766#gid=1659856766, worksheet="Sheet1", ttl=0)
     df["Date"] = pd.to_datetime(df["Date"]).dt.date
     df["id"] = df["id"].astype(int)
 except Exception as e:
