@@ -15,7 +15,7 @@ try:
     df["Date"] = pd.to_datetime(df["Date"]).dt.date
     df["id"] = df["id"].astype(int)
 except Exception as e:
-    st.error(f"Could not connect to Google Sheets. Verify your secrets configuration: {e}")
+    st.exception(e)  # This will force Streamlit to display the full error traceback
     st.stop()
 
 # Interactive Table Editor
