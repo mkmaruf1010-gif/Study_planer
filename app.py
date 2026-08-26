@@ -28,7 +28,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("B.Sc. Geography Study Planner")
+st.title("Study Planner")
 
 SPREADSHEET_URL = (
     "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
@@ -125,7 +125,7 @@ try:
   }
 
   # Year selector control at the top
-  st.markdown("### 📌 Select Academic Year to Manage")
+  st.markdown("### Select Academic Year to Manage")
   selected_year = st.selectbox(
       "Choose Year",
       options=["1st Year", "2nd Year", "3rd Year", "4th Year"],
@@ -135,7 +135,7 @@ try:
   # Filter DataFrame for the selected year
   df_filtered = df[df["Year"] == selected_year].copy()
 
-  st.markdown(f"### 📅 Study Schedule & Tasks — {selected_year}")
+  st.markdown(f"### Study Schedule & Tasks — {selected_year}")
 
   edited_df = st.data_editor(
       df_filtered,
