@@ -1,204 +1,171 @@
-import io
-import pandas as pd
 import streamlit as st
+import pandas as pd
 
-# 1. Page Configuration & Theme
-st.set_page_config(
-    page_title="7-Day Revision & Task Planner", page_icon="📅", layout="wide"
-)
+# Page Configuration
+st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 
-st.markdown(
-    """
-<style>
-    .stApp { background-color: #0f172a; color: #f8fafc; }
-    .stButton>button { background-color: #38bdf8; color: #0f172a; font-weight: bold; border-radius: 6px; border: none; }
-    .stButton>button:hover { background-color: #0284c7; color: #ffffff; }
-    div[data-testid="stMetricValue"] { color: #38bdf8; }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+# Custom CSS for styling to match screenshot aesthetics
+st.markdown("""
+    <style>
+    .main-title {
+        font-size: 32px;
+        font-weight: 400;
+        margin-bottom: 25px;
+        color: #1A1A1A;
+    }
+    .metric-container {
+        text-align: center;
+        padding: 10px;
+    }
+    .metric-label {
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        color: #555555;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .metric-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1A1A1A;
+        margin-top: 4px;
+    }
+    .divider {
+        border-right: 1px solid #CCCCCC;
+        height: 40px;
+        margin: auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# 2. Application Header
-st.title("📅 7-Day Intensive Revision Planner")
-st.caption("All-in-one interactive study schedule and task tracker")
+st.markdown('<div class="main-title">B.Sc. Geography Study Planner</div>', unsafe_allow_html=True)
 
-# 3. Default Dataset Initialization
-DEFAULT_SCHEDULE = {
-    "Mon (Day 1)": {
-        "Subject": "Geographical Thoughts & Concepts",
-        "Topic": "Core Paradigms, Determinism vs Possibilism",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-    "Tue (Day 2)": {
-        "Subject": "Oceanography & Coastal Geomorphology",
-        "Topic": "Marine Relief & Shoreline Dynamics",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-    "Wed (Day 3)": {
-        "Subject": "Environmental Hazards & Disaster Mgmt",
-        "Topic": "Flood & Cyclone Dynamics",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-    "Thu (Day 4)": {
-        "Subject": "Applied GIS & Remote Sensing",
-        "Topic": "Digital Image Processing & NDWI/NDVI",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-    "Fri (Day 5)": {
-        "Subject": "Urban Geography & Settlement Studies",
-        "Topic": "Urban Structure Models & UHI Patterns",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-    "Sat (Day 6)": {
-        "Subject": "Geography of Asia & Regional Dev",
-        "Topic": "Asian Economy & Resource Distribution",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-    "Sun (Day 7)": {
-        "Subject": "Research Methodology & Practical",
-        "Topic": "Sampling, Quantitative Methods & Viva Prep",
-        "Time": "07:00 AM - 09:00 AM",
-    },
-}
-
-if "tracker_data" not in st.session_state:
-    st.session_state.tracker_data = pd.DataFrame([
+# Sample Data Initializer
+if "planner_data" not in st.session_state:
+    st.session_state.planner_data = pd.DataFrame([
         {
+            "id": 1,
+            "Day": "Mon",
+            "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)",
             "Subject": "Geographical Thoughts",
-            "Theory Revised": True,
-            "Past Papers Solved": True,
-            "Diagrams Prepared": False,
-            "Status": "In Progress",
+            "Category": "Theoretical",
+            "Task / Focus": "Diagram / Lab Practice",
+            "Status": False
         },
         {
-            "Subject": "Oceanography & Coastal",
-            "Theory Revised": True,
-            "Past Papers Solved": False,
-            "Diagrams Prepared": True,
-            "Status": "In Progress",
+            "id": 2,
+            "Day": "Mon",
+            "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)",
+            "Subject": "Geographical Thoughts",
+            "Category": "Theoretical",
+            "Task / Focus": "Diagram / Lab Practice",
+            "Status": False
         },
         {
-            "Subject": "Environmental Hazards",
-            "Theory Revised": False,
-            "Past Papers Solved": False,
-            "Diagrams Prepared": False,
-            "Status": "Not Started",
+            "id": 3,
+            "Day": "Mon",
+            "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)",
+            "Subject": "Geographical Thoughts",
+            "Category": "Technical",
+            "Task / Focus": "Diagram / Lab Practice",
+            "Status": False
         },
         {
-            "Subject": "Applied GIS & RS",
-            "Theory Revised": True,
-            "Past Papers Solved": True,
-            "Diagrams Prepared": True,
-            "Status": "Completed",
+            "id": 4,
+            "Day": "Mon",
+            "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Board Questions)",
+            "Subject": "Geographical Thoughts",
+            "Category": "Revision",
+            "Task / Focus": "Past Board Questions",
+            "Status": False
         },
         {
-            "Subject": "Urban Geography",
-            "Theory Revised": False,
-            "Past Papers Solved": False,
-            "Diagrams Prepared": False,
-            "Status": "Not Started",
+            "id": 5,
+            "Day": "Tue",
+            "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)",
+            "Subject": "Geomorphology",
+            "Category": "Theoretical",
+            "Task / Focus": "Map Drawing",
+            "Status": False
         },
         {
-            "Subject": "Geography of Asia",
-            "Theory Revised": False,
-            "Past Papers Solved": False,
-            "Diagrams Prepared": False,
-            "Status": "Not Started",
-        },
-        {
-            "Subject": "Research Methodology",
-            "Theory Revised": False,
-            "Past Papers Solved": False,
-            "Diagrams Prepared": False,
-            "Status": "Not Started",
-        },
+            "id": 6,
+            "Day": "Wed",
+            "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)",
+            "Subject": "Climatology",
+            "Category": "Practical",
+            "Task / Focus": "Data Calculation",
+            "Status": True
+        }
     ])
 
-# 4. Multi-Tab Navigation Interface
-tab1, tab2, tab3 = st.tabs(
-    ["🗓️ Daily Schedule Planner", "📊 Syllabus Revision Tracker", "📥 Export Data"]
+# Helper filters logic
+df = st.session_state.planner_data
+
+# Bottom Filters Setup
+col_filter1, col_filter2 = st.columns(2)
+
+with col_filter1:
+    days = ["All"] + sorted(list(df["Day"].unique()))
+    selected_day = st.selectbox("Filter Day", days)
+
+with col_filter2:
+    categories = ["All"] + sorted(list(df["Category"].unique()))
+    selected_category = st.selectbox("Filter Category", categories)
+
+# Apply filtering
+filtered_df = df.copy()
+
+if selected_day != "All":
+    filtered_df = filtered_df[filtered_df["Day"] == selected_day]
+
+if selected_category != "All":
+    filtered_df = filtered_df[filtered_df["Category"] == selected_category]
+
+# Metric Display Section
+total_slots = len(filtered_df)
+done_tasks = int(filtered_df["Status"].sum())
+
+m_col1, m_col2, m_col3 = st.columns([2, 0.1, 2])
+
+with m_col1:
+    st.markdown(f"""
+        <div class="metric-container">
+            <div class="metric-label">FILTERED SLOTS</div>
+            <div class="metric-value">{total_slots}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+with m_col2:
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+with m_col3:
+    st.markdown(f"""
+        <div class="metric-container">
+            <div class="metric-label">TASKS DONE</div>
+            <div class="metric-value">{done_tasks} / {total_slots}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+st.write("")
+
+# Table Display with interactive Status Checkbox
+edited_df = st.data_editor(
+    filtered_df[["Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
+    column_config={
+        "Status": st.column_config.CheckboxColumn(
+            "Status (Checkbox)",
+            help="Toggle task completion status",
+            default=False,
+        )
+    },
+    disabled=["Day", "Time Slot", "Subject", "Category", "Task / Focus"],
+    hide_index=True,
+    use_container_width=True
 )
 
-# Tab 1: Interactive Time Blocks
-with tab1:
-  selected_day = st.selectbox(
-      "Select Day:", list(DEFAULT_SCHEDULE.keys())
-  )
-  day_info = DEFAULT_SCHEDULE[selected_day]
-
-  c1, c2, c3 = st.columns([2, 2, 1])
-  c1.metric("Subject Focus", day_info["Subject"])
-  c2.metric("Target Topics", day_info["Topic"])
-  c3.metric("Primary Slot", day_info["Time"])
-
-  st.markdown("---")
-  st.subheader(f"Time Blocks for {selected_day}")
-
-  blocks_df = pd.DataFrame([
-      {
-          "Time Slot": "07:00 AM - 09:00 AM",
-          "Block": "Deep Work 1",
-          "Task": f"{day_info['Subject']}: Core Concepts",
-          "Completed": True,
-      },
-      {
-          "Time Slot": "10:00 AM - 01:00 PM",
-          "Block": "Deep Work 2",
-          "Task": f"{day_info['Topic']} Analysis",
-          "Completed": False,
-      },
-      {
-          "Time Slot": "03:30 PM - 05:30 PM",
-          "Block": "Light Work",
-          "Task": "Diagrams, Maps & Notes Review",
-          "Completed": False,
-      },
-      {
-          "Time Slot": "07:00 PM - 09:00 PM",
-          "Block": "Revision",
-          "Task": "Past Board Questions Practice",
-          "Completed": False,
-      },
-  ])
-
-  st.data_editor(
-      blocks_df,
-      num_rows="dynamic",
-      use_container_width=True,
-      key=f"blocks_{selected_day}",
-  )
-
-# Tab 2: Interactive Subject Tracker
-with tab2:
-  st.subheader("Subject-Wise Progress Matrix")
-
-  edited_tracker = st.data_editor(
-      st.session_state.tracker_data,
-      column_config={
-          "Theory Revised": st.column_config.CheckboxColumn("Theory Done"),
-          "Past Papers Solved": st.column_config.CheckboxColumn(
-              "Papers Solved"
-          ),
-          "Diagrams Prepared": st.column_config.CheckboxColumn("Diagrams Done"),
-          "Status": st.column_config.SelectboxColumn(
-              "Status", options=["Not Started", "In Progress", "Completed"]
-          ),
-      },
-      num_rows="dynamic",
-      use_container_width=True,
-      key="tracker_editor",
-  )
-  st.session_state.tracker_data = edited_tracker
-
-# Tab 3: Export Features
-with tab3:
-  st.subheader("Download Schedule & Data")
-
-  csv_bytes = st.session_state.tracker_data.to_csv(index=False).encode("utf-8")
-  st.download_button(
-      label="📥 Download Tracker as CSV",
-      data=csv_bytes,
-      file_name="Revision_Tracker.csv",
-      mime="text/csv",
-  )
+# Sync table modifications back to session memory
+for idx, row in edited_df.iterrows():
+    st.session_state.planner_data.loc[
+        st.session_state.planner_data["Time Slot"] == row["Time Slot"], "Status"
+    ] = row["Status"]
