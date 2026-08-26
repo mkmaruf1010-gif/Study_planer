@@ -7,8 +7,8 @@ st.title("B.Sc. Geography Study Planner")
 # Create connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 try:
-    SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
-    df = conn.read(spreadsheet=SPREADSHEET_URL, worksheet="Sheet1", ttl=0)
+    SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?"
+    df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet1", ttl=0)
     
     # Define all columns matching your Google Sheet headers
     expected_columns = ["id", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]
@@ -46,6 +46,6 @@ if not edited_df.equals(df[["id", "Date", "Day", "Time Slot", "Subject", "Catego
         df.loc[df["id"] == row["id"], ["Date", "Day", "Subject", "Task / Focus", "Status"]] = [
             row["Date"], row["Day"], row["Subject"], row["Task / Focus"], row["Status"]
         ]
-    conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
+    conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?"
 , worksheet="Sheet1", data=df)
     st.toast("Saved to Google Sheets!", icon="☁️")
