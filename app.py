@@ -105,7 +105,7 @@ YEAR_COURSES = {
 def load_initial_data():
     return pd.DataFrame([
         # 1st Year Schedule
-        {"Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
+        {"Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Qus", "Status": False},
         {"Year": "1st Year", "Day": "Mon", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
         {"Year": "1st Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Theoretical", "Task / Focus": "Earth Crust & Lithosphere Notes", "Status": True},
         {"Year": "1st Year", "Day": "Wed", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Technical", "Task / Focus": "Scale Calculations", "Status": False},
@@ -118,7 +118,13 @@ def load_initial_data():
         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
         {"Year": "2nd Year", "Day": "Wed", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 2003 - Climatology", "Category": "Technical", "Task / Focus": "Inversion of Temperature", "Status": False},
         {"Year": "2nd Year", "Day": "Sat", "Time Slot": "02:00 PM - 05:00 PM (Practical)", "Subject": "GELb: 2007 - Computer Cartography and Map Projection", "Category": "Practical", "Task / Focus": "Mercator Projection Construction", "Status": True},
-
+ {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
+         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
+         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
+         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
+         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
+         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
+         {"Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Cycle of Erosion", "Status": False},
         # 3rd Year Schedule
         {"Year": "3rd Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 3001 - Oceanography", "Category": "Theoretical", "Task / Focus": "Ocean Currents & Waves", "Status": False},
         {"Year": "3rd Year", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (GIS Lab)", "Subject": "GELb: 3008 - Introduction to GIS", "Category": "Practical", "Task / Focus": "ArcMap Digitizing & Overlaying", "Status": True},
