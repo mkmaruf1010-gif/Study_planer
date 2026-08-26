@@ -33,7 +33,7 @@ try:
     
     # 4. Save changes button
     if st.button("Save Changes to Google Sheet"):
-        conn.update(spreadsheet=SPREADSHEET_URL, data=edited_df)
+        conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit", data=edited_df)
         st.success("Changes saved to Google Sheets successfully!")
 
 except Exception as e:
