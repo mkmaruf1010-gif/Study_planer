@@ -6,7 +6,7 @@ st.title("B.Sc. Geography Study Planner")
 
 # Create connection
 conn = st.connection("gsheets", type=GSheetsConnection)
-
+try:
     SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
     df = conn.read(spreadsheet=SPREADSHEET_URL, worksheet="Sheet1", ttl=0)
     
