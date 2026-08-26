@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime
 
 # Page Configuration
 st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 
-# Custom Dark Theme Styling (with high-contrast dropdown text & labels)
+# Custom Dark Theme Styling
 st.markdown("""
     <style>
-    /* Main Background & Base Text */
     .stApp {
         background-color: #121212;
         color: #E0E0E0;
@@ -19,28 +19,20 @@ st.markdown("""
         color: #00E5FF;
         text-shadow: 0 0 10px rgba(0,229,255,0.3);
     }
-
-    /* Fix Dropdown / Selectbox Labels Visibility */
     .stSelectbox label {
         color: #00E5FF !important;
         font-weight: 600 !important;
         font-size: 14px !important;
     }
-
-    /* Fix Dropdown Input Box & Text */
     div[data-baseweb="select"] > div {
         background-color: #1E1E1E !important;
         color: #FFFFFF !important;
         border: 1px solid #333333 !important;
         border-radius: 8px !important;
     }
-
-    /* Fix Dropdown Selected Value Text */
     div[data-baseweb="select"] span {
         color: #FFFFFF !important;
     }
-
-    /* Metrics Styling */
     .metric-container {
         text-align: center;
         padding: 15px;
@@ -124,9 +116,9 @@ YEAR_COURSES = {
     ]
 }
 
-# 2. Dataset Setup (Includes Editable Date Field)
+# 2. Dataset Setup
 def load_initial_data():
-    return pd.DataFrame([
+    raw_data = [
         # --- 1ST YEAR ---
         {"id": 1, "Year": "1st Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
         {"id": 2, "Year": "1st Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Classical vs Modern Geography", "Status": False},
@@ -164,14 +156,18 @@ def load_initial_data():
         # --- 4TH YEAR ---
         {"id": 23, "Year": "4th Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 4001 - Hydrology and Fluvial Morphology", "Category": "Theoretical", "Task / Focus": "Drainage Basin Morphometry", "Status": False},
         {"id": 24, "Year": "4th Year", "Date": "2026-08-28", "Day": "Fri", "Time Slot": "03:00 PM - 06:00 PM (RS Lab)", "Subject": "GELb: 4009 - Remote Sensing", "Category": "Technical", "Task / Focus": "NDVI & Image Classification", "Status": False}
-    ])
+    ]
+    df_init = pd.DataFrame(raw_data)
+    # Convert string dates to python datetime.date objects for Streamlit compatibility
+    df_init["Date"] = pd.to_datetime(df_init["Date"]).dt.date
+    return df_init
 
-# Force reset if session data is missing Date column
-if "planner_data" not in st.session_state or "Date" not in st.session_state.planner_data.columns:
+# Reset session state if initialized with non-date types
+if "planner_data" not in st.session_state or not isinstance(st.session_state.planner_data["Date"].iloc[0], (pd.Timestamp, datetime, pd.Series, object)):
     st.session_state.planner_data = load_initial_data()
 
-# Ensure Date column is in proper string format
-st.session_state.planner_data["Date"] = pd.to_datetime(st.session_state.planner_data["Date"]).dt.strftime('%Y-%m-%d')
+# Ensure standard python datetime.date types
+st.session_state.planner_data["Date"] = pd.to_datetime(st.session_state.planner_data["Date"]).dt.date
 df = st.session_state.planner_data
 
 # 3. Filtering Controls
@@ -224,7 +220,7 @@ with m_col3:
 
 st.write("")
 
-# 5. Interactive Table (Date, Day, Subject, Focus, Status are all Editable)
+# 5. Interactive Table (Editable Date, Day, Subject, Focus, Status)
 edited_df = st.data_editor(
     filtered_df[["id", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
     column_config={
@@ -264,10 +260,8 @@ edited_df = st.data_editor(
 
 # 6. Save Table Edits to State
 for idx, row in edited_df.iterrows():
-    # Convert date to string for reliable storage
-    date_str = pd.to_datetime(row["Date"]).strftime('%Y-%m-%d')
-    
+    val_date = pd.to_datetime(row["Date"]).date()
     st.session_state.planner_data.loc[
         st.session_state.planner_data["id"] == row["id"], 
         ["Date", "Status", "Subject", "Day", "Task / Focus"]
-    ] = [date_str, row["Status"], row["Subject"], row["Day"], row["Task / Focus"]]
+    ] = [val_date, row["Status"], row["Subject"], row["Day"], row["Task / Focus"]]
