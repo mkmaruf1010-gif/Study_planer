@@ -33,15 +33,17 @@ st.markdown(
 
 # --- GEMINI AI CONFIGURATION ---
 # Make sure to add GEMINI_API_KEY in your Streamlit secrets (.streamlit/secrets.toml)
-if "GEMINI_API_KEY" in st.secrets:
-  genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+GEMINI_API_KEY = "AQ.Ab8RN6Lv_XDAlEIAUseG-fSYdiJPnPkCATUSfJHOhEcpzLl7MQ"
+
+try:
+  genai.configure(api_key=GEMINI_API_KEY)
   ai_model = genai.GenerativeModel("gemini-1.5-pro")
-else:
+except Exception as e:
   ai_model = None
 
 # --- SIDEBAR: AI STUDY ASSISTANT ---
 with st.sidebar:
-  st.markdown("### 🤖 Geography AI Tutor")
+  st.markdown("### Geography AI Tutor")
   st.write(
       "Ask questions about your syllabus, concepts, or exam preparations!"
   )
