@@ -86,7 +86,7 @@ with st.sidebar:
       st.warning("Please type a question first.")
 
 # --- MAIN APP ---
-st.title("B.Sc. Geography Study Planner & AI Assistant")
+st.title("Study Planner & AI Assistant")
 
 SPREADSHEET_URL = (
     "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
