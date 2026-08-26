@@ -4,7 +4,7 @@ import pandas as pd
 # Page Configuration
 st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 
-# Custom Dark Theme Styling (with bright label contrast)
+# Custom Dark Theme Styling (with high-contrast dropdown text & labels)
 st.markdown("""
     <style>
     /* Main Background & Base Text */
@@ -124,51 +124,54 @@ YEAR_COURSES = {
     ]
 }
 
-# 2. Dataset Setup
+# 2. Dataset Setup (Includes Editable Date Field)
 def load_initial_data():
     return pd.DataFrame([
         # --- 1ST YEAR ---
-        {"id": 1, "Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
-        {"id": 2, "Year": "1st Year", "Day": "Mon", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Classical vs Modern Geography", "Status": False},
-        {"id": 3, "Year": "1st Year", "Day": "Mon", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Theoretical", "Task / Focus": "Lithosphere & Crust Layers", "Status": True},
-        {"id": 4, "Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Questions)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Revision", "Task / Focus": "Past Board Questions", "Status": False},
+        {"id": 1, "Year": "1st Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
+        {"id": 2, "Year": "1st Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Classical vs Modern Geography", "Status": False},
+        {"id": 3, "Year": "1st Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Theoretical", "Task / Focus": "Lithosphere & Crust Layers", "Status": True},
+        {"id": 4, "Year": "1st Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Questions)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Revision", "Task / Focus": "Past Board Questions", "Status": False},
         
-        {"id": 5, "Year": "1st Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1003 - Introduction to Human Geography", "Category": "Theoretical", "Task / Focus": "Population Distribution Factors", "Status": False},
-        {"id": 6, "Year": "1st Year", "Day": "Tue", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Practical", "Task / Focus": "Scale Calculations & Construction", "Status": True},
-        {"id": 7, "Year": "1st Year", "Day": "Tue", "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Questions)", "Subject": "GETh: 1004 - Concept of Region and World Regional Pattern", "Category": "Revision", "Task / Focus": "Formal vs Functional Regions", "Status": False},
+        {"id": 5, "Year": "1st Year", "Date": "2026-08-25", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1003 - Introduction to Human Geography", "Category": "Theoretical", "Task / Focus": "Population Distribution Factors", "Status": False},
+        {"id": 6, "Year": "1st Year", "Date": "2026-08-25", "Day": "Tue", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Practical", "Task / Focus": "Scale Calculations & Construction", "Status": True},
+        {"id": 7, "Year": "1st Year", "Date": "2026-08-25", "Day": "Tue", "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Questions)", "Subject": "GETh: 1004 - Concept of Region and World Regional Pattern", "Category": "Revision", "Task / Focus": "Formal vs Functional Regions", "Status": False},
         
-        {"id": 8, "Year": "1st Year", "Day": "Wed", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1005 - Fundamentals of English Language", "Category": "Theoretical", "Task / Focus": "Academic Report Writing", "Status": False},
-        {"id": 9, "Year": "1st Year", "Day": "Wed", "Time Slot": "02:00 PM - 04:30 PM (Lab Block)", "Subject": "GELb: 1007 - Introduction to Computer in Geography and Environment", "Category": "Practical", "Task / Focus": "MS Excel Data Entry", "Status": False},
+        {"id": 8, "Year": "1st Year", "Date": "2026-08-26", "Day": "Wed", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1005 - Fundamentals of English Language", "Category": "Theoretical", "Task / Focus": "Academic Report Writing", "Status": False},
+        {"id": 9, "Year": "1st Year", "Date": "2026-08-26", "Day": "Wed", "Time Slot": "02:00 PM - 04:30 PM (Lab Block)", "Subject": "GELb: 1007 - Introduction to Computer in Geography and Environment", "Category": "Practical", "Task / Focus": "MS Excel Data Entry", "Status": False},
 
-        {"id": 10, "Year": "1st Year", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "211501 - History of the Emergence of Independent Bangladesh", "Category": "Theoretical", "Task / Focus": "1971 Liberation War History", "Status": False},
-        {"id": 11, "Year": "1st Year", "Day": "Thu", "Time Slot": "07:00 PM - 09:00 PM (Revision)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Revision", "Task / Focus": "Thematic Map Exercises", "Status": False},
+        {"id": 10, "Year": "1st Year", "Date": "2026-08-27", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "211501 - History of the Emergence of Independent Bangladesh", "Category": "Theoretical", "Task / Focus": "1971 Liberation War History", "Status": False},
+        {"id": 11, "Year": "1st Year", "Date": "2026-08-27", "Day": "Thu", "Time Slot": "07:00 PM - 09:00 PM (Revision)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Revision", "Task / Focus": "Thematic Map Exercises", "Status": False},
 
-        {"id": 12, "Year": "1st Year", "Day": "Fri", "Time Slot": "09:00 AM - 11:30 AM (Morning Study)", "Subject": "GEV: 1008 - Field Study + Viva Voce", "Category": "Practical", "Task / Focus": "Field Study Report Preparation", "Status": False},
-        {"id": 13, "Year": "1st Year", "Day": "Fri", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Revision", "Task / Focus": "Atmosphere & Climate Notes", "Status": False},
+        {"id": 12, "Year": "1st Year", "Date": "2026-08-28", "Day": "Fri", "Time Slot": "09:00 AM - 11:30 AM (Morning Study)", "Subject": "GEV: 1008 - Field Study + Viva Voce", "Category": "Practical", "Task / Focus": "Field Study Report Preparation", "Status": False},
+        {"id": 13, "Year": "1st Year", "Date": "2026-08-28", "Day": "Fri", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Revision", "Task / Focus": "Atmosphere & Climate Notes", "Status": False},
 
-        {"id": 14, "Year": "1st Year", "Day": "Sat", "Time Slot": "08:00 AM - 11:00 AM (Morning Intensive)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Bangladeshi Geographers Contribution", "Status": False},
-        {"id": 15, "Year": "1st Year", "Day": "Sat", "Time Slot": "04:00 PM - 06:00 PM (Lab Practice)", "Subject": "GELb: 1007 - Introduction to Computer in Geography and Environment", "Category": "Practical", "Task / Focus": "PowerPoint Presentation Setup", "Status": False},
+        {"id": 14, "Year": "1st Year", "Date": "2026-08-29", "Day": "Sat", "Time Slot": "08:00 AM - 11:00 AM (Morning Intensive)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Bangladeshi Geographers Contribution", "Status": False},
+        {"id": 15, "Year": "1st Year", "Date": "2026-08-29", "Day": "Sat", "Time Slot": "04:00 PM - 06:00 PM (Lab Practice)", "Subject": "GELb: 1007 - Introduction to Computer in Geography and Environment", "Category": "Practical", "Task / Focus": "PowerPoint Presentation Setup", "Status": False},
 
-        {"id": 16, "Year": "1st Year", "Day": "Sun", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1003 - Introduction to Human Geography", "Category": "Theoretical", "Task / Focus": "Economic Activities Review", "Status": False},
-        {"id": 17, "Year": "1st Year", "Day": "Sun", "Time Slot": "08:00 PM - 10:00 PM (Weekly Review)", "Subject": "GETh: 1004 - Concept of Region and World Regional Pattern", "Category": "Revision", "Task / Focus": "Weekly Summary & Flashcards", "Status": False},
+        {"id": 16, "Year": "1st Year", "Date": "2026-08-30", "Day": "Sun", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1003 - Introduction to Human Geography", "Category": "Theoretical", "Task / Focus": "Economic Activities Review", "Status": False},
+        {"id": 17, "Year": "1st Year", "Date": "2026-08-30", "Day": "Sun", "Time Slot": "08:00 PM - 10:00 PM (Weekly Review)", "Subject": "GETh: 1004 - Concept of Region and World Regional Pattern", "Category": "Revision", "Task / Focus": "Weekly Summary & Flashcards", "Status": False},
 
         # --- 2ND YEAR ---
-        {"id": 18, "Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Erosion Theory", "Status": False},
-        {"id": 19, "Year": "2nd Year", "Day": "Wed", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 2003 - Climatology", "Category": "Technical", "Task / Focus": "Atmospheric Pressure Belts", "Status": False},
-        {"id": 20, "Year": "2nd Year", "Day": "Sat", "Time Slot": "02:00 PM - 05:00 PM (Practical)", "Subject": "GELb: 2007 - Computer Cartography and Map Projection", "Category": "Practical", "Task / Focus": "Mercator Projection Construction", "Status": True},
+        {"id": 18, "Year": "2nd Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Erosion Theory", "Status": False},
+        {"id": 19, "Year": "2nd Year", "Date": "2026-08-26", "Day": "Wed", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 2003 - Climatology", "Category": "Technical", "Task / Focus": "Atmospheric Pressure Belts", "Status": False},
+        {"id": 20, "Year": "2nd Year", "Date": "2026-08-29", "Day": "Sat", "Time Slot": "02:00 PM - 05:00 PM (Practical)", "Subject": "GELb: 2007 - Computer Cartography and Map Projection", "Category": "Practical", "Task / Focus": "Mercator Projection Construction", "Status": True},
 
         # --- 3RD YEAR ---
-        {"id": 21, "Year": "3rd Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 3001 - Oceanography", "Category": "Theoretical", "Task / Focus": "Ocean Currents & Waves", "Status": False},
-        {"id": 22, "Year": "3rd Year", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (GIS Lab)", "Subject": "GELb: 3008 - Introduction to GIS", "Category": "Practical", "Task / Focus": "ArcMap Digitizing & Buffer Analysis", "Status": True},
+        {"id": 21, "Year": "3rd Year", "Date": "2026-08-25", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 3001 - Oceanography", "Category": "Theoretical", "Task / Focus": "Ocean Currents & Waves", "Status": False},
+        {"id": 22, "Year": "3rd Year", "Date": "2026-08-27", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (GIS Lab)", "Subject": "GELb: 3008 - Introduction to GIS", "Category": "Practical", "Task / Focus": "ArcMap Digitizing & Buffer Analysis", "Status": True},
 
         # --- 4TH YEAR ---
-        {"id": 23, "Year": "4th Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 4001 - Hydrology and Fluvial Morphology", "Category": "Theoretical", "Task / Focus": "Drainage Basin Morphometry", "Status": False},
-        {"id": 24, "Year": "4th Year", "Day": "Fri", "Time Slot": "03:00 PM - 06:00 PM (RS Lab)", "Subject": "GELb: 4009 - Remote Sensing", "Category": "Technical", "Task / Focus": "NDVI & Image Classification", "Status": False}
+        {"id": 23, "Year": "4th Year", "Date": "2026-08-24", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 4001 - Hydrology and Fluvial Morphology", "Category": "Theoretical", "Task / Focus": "Drainage Basin Morphometry", "Status": False},
+        {"id": 24, "Year": "4th Year", "Date": "2026-08-28", "Day": "Fri", "Time Slot": "03:00 PM - 06:00 PM (RS Lab)", "Subject": "GELb: 4009 - Remote Sensing", "Category": "Technical", "Task / Focus": "NDVI & Image Classification", "Status": False}
     ])
 
-if "planner_data" not in st.session_state or "id" not in st.session_state.planner_data.columns:
+# Force reset if session data is missing Date column
+if "planner_data" not in st.session_state or "Date" not in st.session_state.planner_data.columns:
     st.session_state.planner_data = load_initial_data()
 
+# Ensure Date column is in proper string format
+st.session_state.planner_data["Date"] = pd.to_datetime(st.session_state.planner_data["Date"]).dt.strftime('%Y-%m-%d')
 df = st.session_state.planner_data
 
 # 3. Filtering Controls
@@ -221,20 +224,26 @@ with m_col3:
 
 st.write("")
 
-# 5. Interactive Table
+# 5. Interactive Table (Date, Day, Subject, Focus, Status are all Editable)
 edited_df = st.data_editor(
-    filtered_df[["id", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
+    filtered_df[["id", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
     column_config={
         "id": None,
-        "Subject": st.column_config.SelectboxColumn(
-            "Subject",
-            help="Syllabus-defined subjects for selected year",
-            options=YEAR_COURSES[selected_year],
+        "Date": st.column_config.DateColumn(
+            "Date",
+            help="Pick or edit the task date",
+            format="YYYY-MM-DD",
             required=True
         ),
         "Day": st.column_config.SelectboxColumn(
             "Day",
             options=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            required=True
+        ),
+        "Subject": st.column_config.SelectboxColumn(
+            "Subject",
+            help="Syllabus-defined subjects for selected year",
+            options=YEAR_COURSES[selected_year],
             required=True
         ),
         "Task / Focus": st.column_config.TextColumn(
@@ -255,7 +264,10 @@ edited_df = st.data_editor(
 
 # 6. Save Table Edits to State
 for idx, row in edited_df.iterrows():
+    # Convert date to string for reliable storage
+    date_str = pd.to_datetime(row["Date"]).strftime('%Y-%m-%d')
+    
     st.session_state.planner_data.loc[
         st.session_state.planner_data["id"] == row["id"], 
-        ["Status", "Subject", "Day", "Task / Focus"]
-    ] = [row["Status"], row["Subject"], row["Day"], row["Task / Focus"]]
+        ["Date", "Status", "Subject", "Day", "Task / Focus"]
+    ] = [date_str, row["Status"], row["Subject"], row["Day"], row["Task / Focus"]]
