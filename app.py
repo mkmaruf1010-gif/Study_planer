@@ -1,4 +1,5 @@
 import traceback
+from datetime import date
 import pandas as pd
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
@@ -6,32 +7,21 @@ from streamlit_gsheets import GSheetsConnection
 # Set wide layout for the screen
 st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 
-# Custom CSS to make headers and table headers highly visible, bold, and modern
+# Custom CSS for main headers
 st.markdown(
     """
     <style>
-        /* Main Application Title */
         h1 {
             color: #0F172A !important;
             font-weight: 800 !important;
             letter-spacing: -0.5px;
         }
-        
-        /* Section Subheaders / Titles */
         h3, h2 {
             color: #1E293B !important;
             font-weight: 700 !important;
             border-bottom: 2px solid #E2E8F0;
             padding-bottom: 6px;
             margin-top: 15px;
-        }
-
-        /* Highlight Table / Data Editor Column Headers */
-        .stDataEditor th, .stDataFrame th, div[data-testid="stDataEditor"] th {
-            background-color: #1E293B !important;
-            color: #FFFFFF !important;
-            font-weight: 700 !important;
-            font-size: 14px !important;
         }
     </style>
 """,
@@ -66,8 +56,16 @@ try:
       df[col] = ""
 
   df = df[expected_columns].fillna("")
+
+  # Convert Date column safely to date objects for the calendar picker
+  if "Date" in df.columns:
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce").dt.date
+
   for col in df.columns:
-    df[col] = df[col].astype(str).replace({"nan": "", "None": "", "<NA>": ""})
+    if col != "Date":
+      df[col] = (
+          df[col].astype(str).replace({"nan": "", "None": "", "<NA>": ""})
+      )
 
   # Convert Status column safely to boolean format for checkboxes
   if "Status" in df.columns:
@@ -126,7 +124,7 @@ try:
       ],
   }
 
-  # Year selector control at the top with a prominent visual header
+  # Year selector control at the top
   st.markdown("### 📌 Select Academic Year to Manage")
   selected_year = st.selectbox(
       "Choose Year",
@@ -137,17 +135,19 @@ try:
   # Filter DataFrame for the selected year
   df_filtered = df[df["Year"] == selected_year].copy()
 
-  # High-visibility subheader for the schedule table
   st.markdown(f"### 📅 Study Schedule & Tasks — {selected_year}")
 
   edited_df = st.data_editor(
       df_filtered,
       column_config={
           "id": None,
-          (
-              "Year"
-          ): None,  # Hidden because the year selector controls it globally for this view
-          "Date": st.column_config.TextColumn("Date (YYYY-MM-DD)"),
+          "Year": None,
+          # Date column configured with Calendar Picker
+          "Date": st.column_config.DateColumn(
+              "Date (YYYY-MM-DD)",
+              format="YYYY-MM-DD",
+              required=False,
+          ),
           "Day": st.column_config.SelectboxColumn(
               "Day",
               options=[
@@ -174,9 +174,7 @@ try:
           ),
           "Subject": st.column_config.SelectboxColumn(
               "Subject",
-              options=subjects_by_year[
-                  selected_year
-              ],  # Dynamically shows ONLY the selected year's subjects!
+              options=subjects_by_year[selected_year],
               required=False,
           ),
           "Category": st.column_config.SelectboxColumn(
@@ -203,17 +201,33 @@ try:
 
   # Save changes button
   if st.button("Save Changes to Google Sheet", type="primary"):
-    # Automatically tag any newly added rows with the correct active year
     edited_df["Year"] = selected_year
 
     save_edited = edited_df.copy()
+
+    # Convert date back to string format before saving to Google Sheets
+    if "Date" in save_edited.columns:
+      save_edited["Date"] = pd.to_datetime(
+          save_edited["Date"], errors="coerce"
+      ).dt.strftime("%Y-%m-%d")
+      save_edited["Date"] = (
+          save_edited["Date"].fillna("").astype(str).replace("NaT", "")
+      )
+
     if "Status" in save_edited.columns:
       save_edited["Status"] = save_edited["Status"].apply(
           lambda x: "Completed" if x else "Pending"
       )
 
-    # Merge updated rows back into the main dataset, preserving other years' data
     df_other_years = df[df["Year"] != selected_year]
+    if "Date" in df_other_years.columns:
+      df_other_years["Date"] = pd.to_datetime(
+          df_other_years["Date"], errors="coerce"
+      ).dt.strftime("%Y-%m-%d")
+      df_other_years["Date"] = (
+          df_other_years["Date"].fillna("").astype(str).replace("NaT", "")
+      )
+
     final_save_df = pd.concat(
         [df_other_years, save_edited], ignore_index=True
     )
