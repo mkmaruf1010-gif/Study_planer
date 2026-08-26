@@ -1,11 +1,14 @@
-import traceback
 from datetime import date
+import traceback
+import google.generativeai as genai
 import pandas as pd
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 
 # Set wide layout for the screen
-st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
+st.set_page_config(
+    page_title="B.Sc. Geography Study Planner & AI", layout="wide"
+)
 
 # Custom CSS for main headers
 st.markdown(
@@ -28,7 +31,60 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Study Planner")
+# --- GEMINI AI CONFIGURATION ---
+# Make sure to add GEMINI_API_KEY in your Streamlit secrets (.streamlit/secrets.toml)
+if "GEMINI_API_KEY" in st.secrets:
+  genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+  ai_model = genai.GenerativeModel("gemini-1.5-pro")
+else:
+  ai_model = None
+
+# --- SIDEBAR: AI STUDY ASSISTANT ---
+with st.sidebar:
+  st.markdown("### 🤖 Geography AI Tutor")
+  st.write(
+      "Ask questions about your syllabus, concepts, or exam preparations!"
+  )
+
+  if "ai_messages" not in st.session_state:
+    st.session_state.ai_messages = []
+
+  # Display chat history in sidebar
+  for message in st.session_state.ai_messages:
+    with st.chat_message(message["role"]):
+      st.markdown(message["content"])
+
+  # AI Input
+  user_query = st.text_input(
+      "Type your question here...", key="ai_query_input"
+  )
+  if st.button("Ask AI", type="primary"):
+    if user_query:
+      if ai_model:
+        st.session_state.ai_messages.append(
+            {"role": "user", "content": user_query}
+        )
+        with st.spinner("AI is thinking..."):
+          try:
+            prompt = f"You are an expert B.Sc. Geography and Environment professor. Explain this clearly and concisely for a student: {user_query}"
+            response = ai_model.generate_content(prompt)
+            ai_reply = response.text
+          except Exception as e:
+            ai_reply = f"Error: {e}"
+        st.session_state.ai_messages.append(
+            {"role": "assistant", "content": ai_reply}
+        )
+        st.rerun()
+      else:
+        st.error(
+            "GEMINI_API_KEY is missing in Streamlit Secrets! Please configure"
+            " it."
+        )
+    else:
+      st.warning("Please type a question first.")
+
+# --- MAIN APP ---
+st.title("B.Sc. Geography Study Planner & AI Assistant")
 
 SPREADSHEET_URL = (
     "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
@@ -125,7 +181,7 @@ try:
   }
 
   # Year selector control at the top
-  st.markdown("### Select Academic Year to Manage")
+  st.markdown("### 📌 Select Academic Year to Manage")
   selected_year = st.selectbox(
       "Choose Year",
       options=["1st Year", "2nd Year", "3rd Year", "4th Year"],
@@ -135,14 +191,13 @@ try:
   # Filter DataFrame for the selected year
   df_filtered = df[df["Year"] == selected_year].copy()
 
-  st.markdown(f"### Study Schedule & Tasks — {selected_year}")
+  st.markdown(f"### 📅 Study Schedule & Tasks — {selected_year}")
 
   edited_df = st.data_editor(
       df_filtered,
       column_config={
           "id": None,
           "Year": None,
-          # Date column configured with Calendar Picker
           "Date": st.column_config.DateColumn(
               "Date (YYYY-MM-DD)",
               format="YYYY-MM-DD",
@@ -205,7 +260,6 @@ try:
 
     save_edited = edited_df.copy()
 
-    # Convert date back to string format before saving to Google Sheets
     if "Date" in save_edited.columns:
       save_edited["Date"] = pd.to_datetime(
           save_edited["Date"], errors="coerce"
