@@ -1,4 +1,4 @@
-import pandas as pd
+import traceback
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 
@@ -9,7 +9,7 @@ SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0
 try:
     # 1. Establish connection and read data
     conn = st.connection("gsheets", type=GSheetsConnection)
-    df = conn.read(spreadsheet=SPREADSHEET_URL, ttl=0)
+    df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit", ttl=0)
     
     # 2. Ensure all expected columns exist
     expected_columns = ["id", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]
@@ -37,5 +37,6 @@ try:
         st.success("Changes saved to Google Sheets successfully!")
 
 except Exception as e:
-    st.error(f"Detailed Connection Error: {e}")
+    st.error("Detailed Connection Error Traceback:")
+    st.code(traceback.format_exc())
     st.stop()
