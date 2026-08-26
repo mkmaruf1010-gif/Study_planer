@@ -12,10 +12,10 @@ try:
     df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit", ttl=0)
     
     # 2. Ensure all expected columns exist
-    expected_columns = ["id", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]
+    expected_columns = ["ID", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]
     for col in expected_columns:
         if col not in df.columns:
-            df[col] = ""
+            df[col] = "ID", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"
             
     df_filtered = df[expected_columns]
     
