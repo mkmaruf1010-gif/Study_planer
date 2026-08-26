@@ -12,7 +12,7 @@ SPREADSHEET_URL ="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0a
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 try:
-    df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet 1", ttl=0)
+    df = conn.read(spreadsheet= "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet 1", ttl=0)
     df["Date"] = pd.to_datetime(df["Date"]).dt.date
     df["id"] = df["id"].astype(int)
 except Exception as e:
@@ -39,10 +39,8 @@ if not edited_df.equals(df[["id", "Date", "Day", "Time Slot", "Subject", "Catego
         df.loc[df["id"] == row["id"], ["Date", "Day", "Subject", "Task / Focus", "Status"]] = [
             row["Date"], row["Day"], row["Subject"], row["Task / Focus"], row["Status"]
         ]
-    conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet 1", data=df)
+    conn.update(spreadsheet= "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet 1", data=df)
     st.toast("Saved to Google Sheets!", icon="☁️")
-    # Page Configuration
-st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 
 # Custom Dark Theme Styling
 st.markdown("""
