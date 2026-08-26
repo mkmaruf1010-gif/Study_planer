@@ -1,4 +1,10 @@
-# Custom Dark Theme Styling (with high-contrast dropdown text & labels)
+import streamlit as st
+import pandas as pd
+
+# Page Configuration
+st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
+
+# Custom Dark Theme Styling (with bright label contrast)
 st.markdown("""
     <style>
     /* Main Background & Base Text */
@@ -62,3 +68,194 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
+st.markdown('<div class="main-title">B.Sc. Geography Study Planner</div>', unsafe_allow_html=True)
+
+# 1. Dhaka University Geography Syllabus Mapping
+YEAR_COURSES = {
+    "1st Year": [
+        "GETh: 1001 - Geographical Thoughts and Concepts",
+        "GETh: 1002 - Introduction to Physical Geography",
+        "GETh: 1003 - Introduction to Human Geography",
+        "GETh: 1004 - Concept of Region and World Regional Pattern",
+        "GETh: 1005 - Fundamentals of English Language",
+        "GELb: 1006 - Fundamentals of Cartography",
+        "GELb: 1007 - Introduction to Computer in Geography and Environment",
+        "211501 - History of the Emergence of Independent Bangladesh",
+        "GEV: 1008 - Field Study + Viva Voce"
+    ],
+    "2nd Year": [
+        "GETh: 2001 - Environmental Chemistry",
+        "GETh: 2002 - Geomorphology",
+        "GETh: 2003 - Climatology",
+        "GETh: 2004 - Economic Geography",
+        "GETh: 2005 - Cultural Geography",
+        "GETh: 2006 - Quantitative Techniques in Geography - I",
+        "GELb: 2007 - Computer Cartography and Map Projection",
+        "GELb: 2008 - Field Work in Physical Geography",
+        "GEV: 2009 - Viva Voce"
+    ],
+    "3rd Year": [
+        "GETh: 3001 - Oceanography",
+        "GETh: 3002 - Geography of Soil",
+        "GETh: 3003 - Biogeography",
+        "GETh: 3004 - Population Geography",
+        "GETh: 3005 - Geography of Settlement",
+        "GETh: 3006 - Geography of Bangladesh",
+        "GELb: 3007 - Environmental Analysis",
+        "GELb: 3008 - Introduction to GIS",
+        "GELb: 3009 - Surveying",
+        "GELb: 3010 - Research Methods in Geography",
+        "GELb: 3011 - Field Work in Human Geography",
+        "GEV: 3012 - Viva-voce"
+    ],
+    "4th Year": [
+        "GETh: 4001 - Hydrology and Fluvial Morphology",
+        "GETh: 4002 - Disaster Management",
+        "GETh: 4003 - Regional Geography and Environment of South Asia",
+        "GETh: 4004 - Transport Geography",
+        "GETh: 4005 - Urban Geography",
+        "GETh: 4006 - Political Geography",
+        "GELb: 4007 - Quantitative Techniques in Geography - II",
+        "GELb: 4008 - Map Interpretation",
+        "GELb: 4009 - Remote Sensing",
+        "GELb: 4010 - Land Use Survey",
+        "GEV: 4011 - Viva-voce"
+    ]
+}
+
+# 2. Dataset Setup
+def load_initial_data():
+    return pd.DataFrame([
+        # --- 1ST YEAR ---
+        {"id": 1, "Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
+        {"id": 2, "Year": "1st Year", "Day": "Mon", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Classical vs Modern Geography", "Status": False},
+        {"id": 3, "Year": "1st Year", "Day": "Mon", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Theoretical", "Task / Focus": "Lithosphere & Crust Layers", "Status": True},
+        {"id": 4, "Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Questions)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Revision", "Task / Focus": "Past Board Questions", "Status": False},
+        
+        {"id": 5, "Year": "1st Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1003 - Introduction to Human Geography", "Category": "Theoretical", "Task / Focus": "Population Distribution Factors", "Status": False},
+        {"id": 6, "Year": "1st Year", "Day": "Tue", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Practical", "Task / Focus": "Scale Calculations & Construction", "Status": True},
+        {"id": 7, "Year": "1st Year", "Day": "Tue", "Time Slot": "07:00 PM - 09:00 PM (Revision & Past Questions)", "Subject": "GETh: 1004 - Concept of Region and World Regional Pattern", "Category": "Revision", "Task / Focus": "Formal vs Functional Regions", "Status": False},
+        
+        {"id": 8, "Year": "1st Year", "Day": "Wed", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1005 - Fundamentals of English Language", "Category": "Theoretical", "Task / Focus": "Academic Report Writing", "Status": False},
+        {"id": 9, "Year": "1st Year", "Day": "Wed", "Time Slot": "02:00 PM - 04:30 PM (Lab Block)", "Subject": "GELb: 1007 - Introduction to Computer in Geography and Environment", "Category": "Practical", "Task / Focus": "MS Excel Data Entry", "Status": False},
+
+        {"id": 10, "Year": "1st Year", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "211501 - History of the Emergence of Independent Bangladesh", "Category": "Theoretical", "Task / Focus": "1971 Liberation War History", "Status": False},
+        {"id": 11, "Year": "1st Year", "Day": "Thu", "Time Slot": "07:00 PM - 09:00 PM (Revision)", "Subject": "GELb: 1006 - Fundamentals of Cartography", "Category": "Revision", "Task / Focus": "Thematic Map Exercises", "Status": False},
+
+        {"id": 12, "Year": "1st Year", "Day": "Fri", "Time Slot": "09:00 AM - 11:30 AM (Morning Study)", "Subject": "GEV: 1008 - Field Study + Viva Voce", "Category": "Practical", "Task / Focus": "Field Study Report Preparation", "Status": False},
+        {"id": 13, "Year": "1st Year", "Day": "Fri", "Time Slot": "03:30 PM - 05:30 PM (Light Work Block 3)", "Subject": "GETh: 1002 - Introduction to Physical Geography", "Category": "Revision", "Task / Focus": "Atmosphere & Climate Notes", "Status": False},
+
+        {"id": 14, "Year": "1st Year", "Day": "Sat", "Time Slot": "08:00 AM - 11:00 AM (Morning Intensive)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Bangladeshi Geographers Contribution", "Status": False},
+        {"id": 15, "Year": "1st Year", "Day": "Sat", "Time Slot": "04:00 PM - 06:00 PM (Lab Practice)", "Subject": "GELb: 1007 - Introduction to Computer in Geography and Environment", "Category": "Practical", "Task / Focus": "PowerPoint Presentation Setup", "Status": False},
+
+        {"id": 16, "Year": "1st Year", "Day": "Sun", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1003 - Introduction to Human Geography", "Category": "Theoretical", "Task / Focus": "Economic Activities Review", "Status": False},
+        {"id": 17, "Year": "1st Year", "Day": "Sun", "Time Slot": "08:00 PM - 10:00 PM (Weekly Review)", "Subject": "GETh: 1004 - Concept of Region and World Regional Pattern", "Category": "Revision", "Task / Focus": "Weekly Summary & Flashcards", "Status": False},
+
+        # --- 2ND YEAR ---
+        {"id": 18, "Year": "2nd Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 2002 - Geomorphology", "Category": "Theoretical", "Task / Focus": "Davisian Erosion Theory", "Status": False},
+        {"id": 19, "Year": "2nd Year", "Day": "Wed", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 2003 - Climatology", "Category": "Technical", "Task / Focus": "Atmospheric Pressure Belts", "Status": False},
+        {"id": 20, "Year": "2nd Year", "Day": "Sat", "Time Slot": "02:00 PM - 05:00 PM (Practical)", "Subject": "GELb: 2007 - Computer Cartography and Map Projection", "Category": "Practical", "Task / Focus": "Mercator Projection Construction", "Status": True},
+
+        # --- 3RD YEAR ---
+        {"id": 21, "Year": "3rd Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 3001 - Oceanography", "Category": "Theoretical", "Task / Focus": "Ocean Currents & Waves", "Status": False},
+        {"id": 22, "Year": "3rd Year", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (GIS Lab)", "Subject": "GELb: 3008 - Introduction to GIS", "Category": "Practical", "Task / Focus": "ArcMap Digitizing & Buffer Analysis", "Status": True},
+
+        # --- 4TH YEAR ---
+        {"id": 23, "Year": "4th Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 4001 - Hydrology and Fluvial Morphology", "Category": "Theoretical", "Task / Focus": "Drainage Basin Morphometry", "Status": False},
+        {"id": 24, "Year": "4th Year", "Day": "Fri", "Time Slot": "03:00 PM - 06:00 PM (RS Lab)", "Subject": "GELb: 4009 - Remote Sensing", "Category": "Technical", "Task / Focus": "NDVI & Image Classification", "Status": False}
+    ])
+
+if "planner_data" not in st.session_state or "id" not in st.session_state.planner_data.columns:
+    st.session_state.planner_data = load_initial_data()
+
+df = st.session_state.planner_data
+
+# 3. Filtering Controls
+col_year, col_day, col_cat = st.columns(3)
+
+with col_year:
+    selected_year = st.selectbox("Select Academic Year (Syllabus)", list(YEAR_COURSES.keys()))
+
+with col_day:
+    week_days = ["All", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    selected_day = st.selectbox("Filter Day", week_days)
+
+with col_cat:
+    categories = ["All"] + sorted(list(df["Category"].unique()))
+    selected_category = st.selectbox("Filter Category", categories)
+
+# Apply Filters
+filtered_df = df[df["Year"] == selected_year].copy()
+
+if selected_day != "All":
+    filtered_df = filtered_df[filtered_df["Day"] == selected_day]
+
+if selected_category != "All":
+    filtered_df = filtered_df[filtered_df["Category"] == selected_category]
+
+# 4. Filtered Stats Metrics
+total_slots = len(filtered_df)
+done_tasks = int(filtered_df["Status"].sum()) if total_slots > 0 else 0
+
+m_col1, m_col2, m_col3 = st.columns([2, 0.1, 2])
+
+with m_col1:
+    st.markdown(f"""
+        <div class="metric-container">
+            <div class="metric-label">FILTERED SLOTS ({selected_year.upper()})</div>
+            <div class="metric-value">{total_slots}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+with m_col2:
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+with m_col3:
+    st.markdown(f"""
+        <div class="metric-container">
+            <div class="metric-label">TASKS DONE</div>
+            <div class="metric-value">{done_tasks} / {total_slots}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+st.write("")
+
+# 5. Interactive Table
+edited_df = st.data_editor(
+    filtered_df[["id", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
+    column_config={
+        "id": None,
+        "Subject": st.column_config.SelectboxColumn(
+            "Subject",
+            help="Syllabus-defined subjects for selected year",
+            options=YEAR_COURSES[selected_year],
+            required=True
+        ),
+        "Day": st.column_config.SelectboxColumn(
+            "Day",
+            options=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            required=True
+        ),
+        "Task / Focus": st.column_config.TextColumn(
+            "Task / Focus",
+            help="Click to edit custom notes or task details",
+            required=True
+        ),
+        "Status": st.column_config.CheckboxColumn(
+            "Status (Checkbox)",
+            help="Toggle task completion status",
+            default=False
+        )
+    },
+    disabled=["Time Slot", "Category"],
+    hide_index=True,
+    use_container_width=True
+)
+
+# 6. Save Table Edits to State
+for idx, row in edited_df.iterrows():
+    st.session_state.planner_data.loc[
+        st.session_state.planner_data["id"] == row["id"], 
+        ["Status", "Subject", "Day", "Task / Focus"]
+    ] = [row["Status"], row["Subject"], row["Day"], row["Task / Focus"]]
