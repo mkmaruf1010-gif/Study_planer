@@ -7,7 +7,6 @@ st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 # Custom CSS for Dark Theme and Styling
 st.markdown("""
     <style>
-    /* Dark Theme Backgrounds */
     .stApp {
         background-color: #121212;
         color: #E0E0E0;
@@ -66,7 +65,7 @@ YEAR_COURSES = {
         "GETh: 2001 - Environmental Chemistry",
         "GETh: 2002 - Geomorphology",
         "GETh: 2003 - Climatology",
-        "GETh: 2004 - Economic Geography",
+        "GETh: 4004 - Economic Geography",
         "GETh: 2005 - Cultural Geography",
         "GETh: 2006 - Quantitative Techniques in Geography - I",
         "GELb: 2007 - Computer Cartography and Map Projection",
@@ -102,9 +101,9 @@ YEAR_COURSES = {
     ]
 }
 
-# 2. Mock Multi-Year Dataset covering all 7 days of the week
-if "planner_data" not in st.session_state:
-    st.session_state.planner_data = pd.DataFrame([
+# 2. Function to load fresh default data
+def load_initial_data():
+    return pd.DataFrame([
         # 1st Year Schedule
         {"Year": "1st Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
         {"Year": "1st Year", "Day": "Mon", "Time Slot": "10:00 AM - 01:00 PM (Deep Work Block 2)", "Subject": "GETh: 1001 - Geographical Thoughts and Concepts", "Category": "Theoretical", "Task / Focus": "Diagram / Lab Practice", "Status": False},
@@ -123,12 +122,15 @@ if "planner_data" not in st.session_state:
         # 3rd Year Schedule
         {"Year": "3rd Year", "Day": "Tue", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 3001 - Oceanography", "Category": "Theoretical", "Task / Focus": "Ocean Currents & Waves", "Status": False},
         {"Year": "3rd Year", "Day": "Thu", "Time Slot": "10:00 AM - 01:00 PM (GIS Lab)", "Subject": "GELb: 3008 - Introduction to GIS", "Category": "Practical", "Task / Focus": "ArcMap Digitizing & Overlaying", "Status": True},
-        {"Year": "3rd Year", "Day": "Sun", "Time Slot": "03:30 PM - 05:30 PM (Fieldwork)", "Subject": "GELb: 3011 - Field Work in Human Geography", "Category": "Practical", "Task / Focus": "Questionnaire Design", "Status": False},
 
         # 4th Year Schedule
         {"Year": "4th Year", "Day": "Mon", "Time Slot": "07:00 AM - 09:00 AM (Deep Work Block 1)", "Subject": "GETh: 4001 - Hydrology and Fluvial Morphology", "Category": "Theoretical", "Task / Focus": "Drainage Basin Analysis", "Status": False},
         {"Year": "4th Year", "Day": "Fri", "Time Slot": "03:00 PM - 06:00 PM (RS Lab)", "Subject": "GELb: 4009 - Remote Sensing", "Category": "Technical", "Task / Focus": "NDVI Image Classification", "Status": False}
     ])
+
+# Safety check: Initialize or reset state if 'Year' column is missing
+if "planner_data" not in st.session_state or "Year" not in st.session_state.planner_data.columns:
+    st.session_state.planner_data = load_initial_data()
 
 df = st.session_state.planner_data
 
@@ -146,7 +148,7 @@ with col_cat:
     categories = ["All"] + sorted(list(df["Category"].unique()))
     selected_category = st.selectbox("Filter Category", categories)
 
-# Apply dynamic filtering logic
+# Apply dynamic filtering logic safely
 filtered_df = df[df["Year"] == selected_year].copy()
 
 if selected_day != "All":
@@ -182,7 +184,7 @@ with m_col3:
 
 st.write("")
 
-# 5. Dynamic Data Table with Editable Checkboxes and Year-Specific Dropdown Subjects
+# 5. Table Display
 edited_df = st.data_editor(
     filtered_df[["Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
     column_config={
@@ -208,7 +210,7 @@ edited_df = st.data_editor(
     use_container_width=True
 )
 
-# Sync changes back to overall session state
+# Sync table modifications back to session memory
 for idx, row in edited_df.iterrows():
     st.session_state.planner_data.loc[
         (st.session_state.planner_data["Year"] == selected_year) & 
