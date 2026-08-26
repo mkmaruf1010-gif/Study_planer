@@ -34,7 +34,7 @@ try:
             lambda x: True if str(x).lower() in ["true", "1", "yes", "completed", "done"] else False
         )
 
-    # 4. Interactive Table Editor with Dropdowns & Checkboxes
+    # 4. Interactive Table Editor with Official Syllabus Subjects
     st.subheader("Study Schedule & Tasks")
     edited_df = st.data_editor(
         df_filtered,
@@ -42,7 +42,7 @@ try:
             "id": None,  # Hide the internal ID column
             "Year": st.column_config.SelectboxColumn(
                 "Year",
-                options=["Year 1", "Year 2", "Year 3", "Year 4"],
+                options=["1st Year", "2nd Year", "3rd Year", "4th Year"],
                 required=False,
             ),
             "Date": st.column_config.TextColumn("Date (YYYY-MM-DD)"),
@@ -59,14 +59,51 @@ try:
             "Subject": st.column_config.SelectboxColumn(
                 "Subject",
                 options=[
-                    "Geomorphology", 
-                    "Climatology", 
-                    "Human Geography", 
-                    "Cartography & GIS", 
-                    "Oceanography", 
-                    "Biogeography", 
-                    "Environmental Geography", 
-                    "Economic Geography"
+                    # First Year Courses
+                    "[1st Year] Geographical Thoughts and Concepts",
+                    "[1st Year] Introduction to Physical Geography",
+                    "[1st Year] Introduction to Human Geography",
+                    "[1st Year] Concept of Region and World Regional Pattern",
+                    "[1st Year] Fundamentals of English Language",
+                    "[1st Year] Fundamentals of Cartography",
+                    "[1st Year] Introduction to Computer in Geography and Environment",
+                    "[1st Year] History of the Emergence of Independent Bangladesh",
+                
+                    
+                    # Second Year Courses
+                    "[2nd Year] Environmental Chemistry",
+                    "[2nd Year] Geomorphology",
+                    "[2nd Year] Climatology",
+                    "[2nd Year] Economic Geography",
+                    "[2nd Year] Cultural Geography",
+                    "[2nd Year] Quantitative Techniques in Geography - I",
+                    "[2nd Year] Computer Cartography and Map Projection",
+                
+                    
+                    # Third Year Courses
+                    "[3rd Year] Oceanography",
+                    "[3rd Year] Geography of Soil",
+                    "[3rd Year] Biogeography",
+                    "[3rd Year] Population Geography",
+                    "[3rd Year] Geography of Settlement",
+                    "[3rd Year] Geography of Bangladesh",
+                    "[3rd Year] Environmental Analysis",
+                    "[3rd Year] Introduction to GIS",
+                    "[3rd Year] Surveying",
+                    "[3rd Year] Research Methods in Geography",
+                   
+                    
+                    # Fourth Year Courses
+                    "[4th Year] Hydrology and Fluvial Morphology",
+                    "[4th Year] Disaster Management",
+                    "[4th Year] Regional Geography and Environment of South Asia",
+                    "[4th Year] Transport Geography",
+                    "[4th Year] Urban Geography",
+                    "[4th Year] Political Geography",
+                    "[4th Year] Quantitative Techniques in Geography - II",
+                    "[4th Year] Map Interpretation",
+                    "[4th Year] Remote Sensing",
+                    
                 ],
                 required=False,
             ),
@@ -81,15 +118,14 @@ try:
             ),
         },
         num_rows="dynamic",
-        use_container_width=True,  # Expands table to full screen width
-        height=550,                # Makes the table larger vertically
+        use_container_width=True,
+        height=550,
         key="study_planner_editor"
     )
     
     # 5. Save changes button
     if st.button("Save Changes to Google Sheet", type="primary"):
         save_df = edited_df.copy()
-        # Convert boolean checkboxes back to readable text for Google Sheets storage
         if "Status" in save_df.columns:
             save_df["Status"] = save_df["Status"].apply(lambda x: "Completed" if x else "Pending")
             
