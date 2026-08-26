@@ -48,7 +48,7 @@ st.markdown("""
 
 st.markdown('<div class="main-title">B.Sc. Geography Study Planner</div>', unsafe_allow_html=True)
 
-# 1. Dhaka University Geography Syllabus Mapping[cite: 1]
+# 1. Dhaka University Geography Syllabus Mapping
 YEAR_COURSES = {
     "1st Year": [
         "GETh: 1001 - Geographical Thoughts and Concepts",
@@ -101,7 +101,7 @@ YEAR_COURSES = {
     ]
 }
 
-# 2. Expanded Initial Data (Covers 7 Days & Multiple Slots per Day)
+# 2. Expanded Dataset Generation
 def load_initial_data():
     return pd.DataFrame([
         # --- 1ST YEAR ---
@@ -143,13 +143,13 @@ def load_initial_data():
         {"id": 24, "Year": "4th Year", "Day": "Fri", "Time Slot": "03:00 PM - 06:00 PM (RS Lab)", "Subject": "GELb: 4009 - Remote Sensing", "Category": "Technical", "Task / Focus": "NDVI & Image Classification", "Status": False}
     ])
 
-# Safety check for missing columns in Session State
-if "planner_data" not in st.session_state or "Year" not in st.session_state.planner_data.columns:
+# Force reset if session data is outdated
+if "planner_data" not in st.session_state or "id" not in st.session_state.planner_data.columns:
     st.session_state.planner_data = load_initial_data()
 
 df = st.session_state.planner_data
 
-# 3. Dynamic Filtering Controls
+# 3. Filtering Controls
 col_year, col_day, col_cat = st.columns(3)
 
 with col_year:
@@ -163,7 +163,7 @@ with col_cat:
     categories = ["All"] + sorted(list(df["Category"].unique()))
     selected_category = st.selectbox("Filter Category", categories)
 
-# Apply Filters
+# Apply Filter Logic
 filtered_df = df[df["Year"] == selected_year].copy()
 
 if selected_day != "All":
@@ -172,7 +172,7 @@ if selected_day != "All":
 if selected_category != "All":
     filtered_df = filtered_df[filtered_df["Category"] == selected_category]
 
-# 4. Filtered Stats Metrics
+# 4. Metrics Display
 total_slots = len(filtered_df)
 done_tasks = int(filtered_df["Status"].sum()) if total_slots > 0 else 0
 
@@ -199,11 +199,11 @@ with m_col3:
 
 st.write("")
 
-# 5. Interactive Table (Editable Task / Focus Column Included)
+# 5. Interactive Table
 edited_df = st.data_editor(
     filtered_df[["id", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
     column_config={
-        "id": None, # Hide unique ID column
+        "id": None, # Hides the ID column from user view
         "Subject": st.column_config.SelectboxColumn(
             "Subject",
             help="Syllabus-defined subjects for selected year",
@@ -217,7 +217,7 @@ edited_df = st.data_editor(
         ),
         "Task / Focus": st.column_config.TextColumn(
             "Task / Focus",
-            help="Click to edit your custom notes or task details",
+            help="Click to edit custom notes or task details",
             required=True
         ),
         "Status": st.column_config.CheckboxColumn(
@@ -226,12 +226,12 @@ edited_df = st.data_editor(
             default=False
         )
     },
-    disabled=["Time Slot", "Category"],  # Note: "Task / Focus" is intentionally omitted from disabled list
+    disabled=["Time Slot", "Category"],
     hide_index=True,
     use_container_width=True
 )
 
-# 6. Save Editable Table Data Back to Session Memory
+# 6. Save Table Edits to State
 for idx, row in edited_df.iterrows():
     st.session_state.planner_data.loc[
         st.session_state.planner_data["id"] == row["id"], 
