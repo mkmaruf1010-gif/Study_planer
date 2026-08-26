@@ -11,7 +11,7 @@ try:
     SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
     
     # Read the first worksheet automatically
-    df = conn.read(spreadsheet="SPREADSHEET_URL", ttl=0)
+    df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit", ttl=0)
     
     st.success("Successfully connected to Google Sheets!")
     
