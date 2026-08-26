@@ -2,23 +2,19 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 st.title("B.Sc. Geography Study Planner")
 
-# Set your Google Sheet URL
-SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
-
-# Initialize connection (reads automatically from st.secrets)
+# Create connection
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 try:
-    df = conn.read(spreadsheet= "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
-, worksheet="Sheet1", ttl=0)
-    df["Date"] = pd.to_datetime(df["Date"]).dt.date
-    df["id"] = df["id"].astype(int)
+    SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
+    df = conn.read(spreadsheet=SPREADSHEET_URL, worksheet="Sheet1", ttl=0)
+    st.dataframe(df)
+    
 except Exception as e:
-    st.error(f"Could not connect to Google Sheets. Verify your secrets configuration: {e}")
-    st.stop()
+    # This will print the precise error message directly on your app screen
+    st.error(f"Detailed Connection Error: {e}")
 
 # Interactive Table Editor
 edited_df = st.data_editor(
