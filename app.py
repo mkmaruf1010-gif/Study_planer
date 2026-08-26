@@ -9,13 +9,24 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 
 try:
     SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
-    df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit", worksheet="Sheet1", ttl=0)
+    df = conn.read(spreadsheet=SPREADSHEET_URL, worksheet="Sheet1", ttl=0)
+    
+    # Define all columns matching your Google Sheet headers
+    expected_columns = ["id", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]
+    
+    # Add any missing columns dynamically if the sheet is brand new/empty
+    for col in expected_columns:
+        if col not in df.columns:
+            df[col] = ""
+            
+    # Select and order the columns cleanly
+    df = df[expected_columns]
+    
+    st.success("Connected to Google Sheets successfully!")
     st.dataframe(df)
     
 except Exception as e:
-    # This will print the precise error message directly on your app screen
     st.error(f"Detailed Connection Error: {e}")
-
 # Interactive Table Editor
 edited_df = st.data_editor(
     df[["id", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]],
