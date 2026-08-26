@@ -6,7 +6,7 @@ from streamlit_gsheets import GSheetsConnection
 # Set wide layout for the screen
 st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 
-# Custom CSS to make headers highly visible, bold, and modern
+# Custom CSS to make headers and table headers highly visible, bold, and modern
 st.markdown(
     """
     <style>
@@ -26,13 +26,12 @@ st.markdown(
             margin-top: 15px;
         }
 
-        /* Custom styling container look for headers */
-        .header-box {
-            background-color: #F8FAFC;
-            border-left: 5px solid #2563EB;
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 10px;
+        /* Highlight Table / Data Editor Column Headers */
+        .stDataEditor th, .stDataFrame th, div[data-testid="stDataEditor"] th {
+            background-color: #1E293B !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            font-size: 14px !important;
         }
     </style>
 """,
