@@ -1,22 +1,23 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
 from streamlit_gsheets import GSheetsConnection
 
 st.set_page_config(page_title="B.Sc. Geography Study Planner", layout="wide")
 st.title("B.Sc. Geography Study Planner")
 
 # Set your Google Sheet URL
-SPREADSHEET_URL ="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?"
+SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
+
 # Initialize connection (reads automatically from st.secrets)
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 try:
-    df = conn.read(spreadsheet= "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet 1", ttl=0)
+    df = conn.read(spreadsheet= "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
+, worksheet="Sheet1", ttl=0)
     df["Date"] = pd.to_datetime(df["Date"]).dt.date
     df["id"] = df["id"].astype(int)
 except Exception as e:
-    st.exception(e)  # This will force Streamlit to display the full error traceback
+    st.error(f"Could not connect to Google Sheets. Verify your secrets configuration: {e}")
     st.stop()
 
 # Interactive Table Editor
@@ -39,5 +40,6 @@ if not edited_df.equals(df[["id", "Date", "Day", "Time Slot", "Subject", "Catego
         df.loc[df["id"] == row["id"], ["Date", "Day", "Subject", "Task / Focus", "Status"]] = [
             row["Date"], row["Day"], row["Subject"], row["Task / Focus"], row["Status"]
         ]
-    conn.update(spreadsheet= "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet 1", data=df)
+    conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
+, worksheet="Sheet1", data=df)
     st.toast("Saved to Google Sheets!", icon="☁️")
