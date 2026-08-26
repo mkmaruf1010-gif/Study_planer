@@ -1,27 +1,21 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 
 st.title("B.Sc. Geography Study Planner")
 
 # Create connection
 conn = st.connection("gsheets", type=GSheetsConnection)
+
 try:
-    SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?"
-    df = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit?", worksheet="Sheet1", ttl=0)
+    SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1Pk94c2vqopKnEU2nc8Dv0aW_z0_9A_TKbFixIReMSL8/edit"
     
-    # Define all columns matching your Google Sheet headers
-    expected_columns = ["id", "Year", "Date", "Day", "Time Slot", "Subject", "Category", "Task / Focus", "Status"]
+    # Read the first worksheet automatically
+    df = conn.read(spreadsheet=SPREADSHEET_URL, ttl=0)
     
-    # Add any missing columns dynamically if the sheet is brand new/empty
-    for col in expected_columns:
-        if col not in df.columns:
-            df[col] = ""
-            
-    # Select and order the columns cleanly
-    df = df[expected_columns]
+    st.success("Successfully connected to Google Sheets!")
     
-    st.success("Connected to Google Sheets successfully!")
+    # Display the raw data to confirm everything works
     st.dataframe(df)
     
 except Exception as e:
